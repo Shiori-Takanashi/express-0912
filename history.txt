@@ -1,0 +1,16 @@
+ 1147  fc -t
+ 1148  fc -t '%Y-%m-%d %H:%M:%S' -l
+ 1149  history
+ 1150  cat ~.zsh_history
+ 1151  cat ~/.zsh_history
+ 1153  git  checkout -b "ver01"
+ 1154  git status
+ 1156  git branch -l
+ 1157  git branch
+ 1158  which zsh
+ 1159  zsh -v
+ 1160  zsh --version
+ 1161  touch all-in-one.zsh
+ 1162  echo $PATH
+ 1163  which node
+ 1164  which npm

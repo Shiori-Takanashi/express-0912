@@ -144,3 +144,7 @@ docker-compose.yml
 test-results/
 playwright-report/
 playwright/.cache/
+
+dev.zsh
+history.txt
+doc/

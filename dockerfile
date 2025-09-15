@@ -9,6 +9,9 @@ RUN npm install && npm run build
 FROM node:20-alpine
 WORKDIR /app
 
+# 本番用環境変数を設定
+ENV NODE_ENV=production
+
 # サーバーコードをコピー
 COPY server/ ./server/
 
@@ -19,8 +22,8 @@ COPY --from=builder /app/client/dist ./client/dist
 WORKDIR /app/server
 RUN npm install --omit=dev
 
-# Cloud Run が利用するポートを明示
-EXPOSE 5000
+# Cloud Run が利用するポートを明示（Cloud Run のデフォルトは 8080）
+EXPOSE 8080
 
 # アプリ起動
 CMD ["node", "server.mjs"]

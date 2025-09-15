@@ -148,3 +148,4 @@ playwright/.cache/
 dev.zsh
 history.txt
 doc/
+get-docker.sh

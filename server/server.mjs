@@ -19,10 +19,12 @@ if (NODE_ENV === 'development') {
     const staticPath = path.join(__dirname, '..', 'client', 'dist');
     app.use(express.static(staticPath));
 
-    app.get('/', (req, res) => {
+    // すべてのリクエストを index.html にフォールバック
+    app.get('*', (req, res) => {
         res.sendFile(path.join(staticPath, 'index.html'));
     });
 }
+
 
 app.get('/api', (req, res) => {
     res.json({ message: 'Get Response OK.' });

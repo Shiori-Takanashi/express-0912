@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-// import fetch from 'node-fetch'; ← 不要
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +11,11 @@ const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 app.use(express.json());
+
+// --- /env エンドポイントを追加 ---
+app.get('/env', (req, res) => {
+    res.json({ env: NODE_ENV });
+});
 
 if (NODE_ENV === 'development') {
     app.use(cors()); // 開発中はCORS許可

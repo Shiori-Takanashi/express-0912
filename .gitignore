@@ -136,9 +136,7 @@ Thumbs.db
 *.crt
 
 # Docker
-Dockerfile
 docker-compose.yml
-.dockerignore
 
 # Testing
 test-results/

@@ -13,9 +13,13 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 // --- 共通処理 ---
 app.use(express.json());
 
+app.get('/env', (req, res) => {
+    res.json({ env: NODE_ENV })
+});
+
 // 共通の API（どちらの環境でも必要ならここに書く）
 app.get('/api', (req, res) => {
-    res.json({ message: `Get Response OK. [${NODE_ENV}]` });
+    res.json({ message: `Get Response OK.` });
 });
 
 app.post('/api', (req, res) => {
@@ -23,7 +27,7 @@ app.post('/api', (req, res) => {
     if (!text) {
         return res.status(400).json({ message: 'Text Is Null.' });
     }
-    res.json({ message: `Text is ${text}. [${NODE_ENV}]` });
+    res.json({ message: `Text is ${text}.` });
 });
 
 // --- 環境別処理 ---

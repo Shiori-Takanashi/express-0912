@@ -135,16 +135,12 @@ Thumbs.db
 *.key
 *.crt
 
-# Docker
-Dockerfile
-docker-compose.yml
-.dockerignore
+# # Docker
+# Dockerfile
+# docker-compose.yml
+# .dockerignore
 
 # Testing
 test-results/
 playwright-report/
 playwright/.cache/
-
-history.txt
-doc/
-get-docker.sh

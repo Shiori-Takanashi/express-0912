@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import ClipLoader from 'react-spinners/ClipLoader'
-import InputMask from 'react-input-mask';
 import './App.css'
 
 function App() {

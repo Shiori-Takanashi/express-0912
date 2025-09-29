@@ -1,7 +1,7 @@
 /* 全体 */
 .App {
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   flex-direction: column;
@@ -15,45 +15,33 @@
 .input-container,
 .btn-container {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 2rem 1rem;
+  padding: 1em 3em;
   text-align: center;
-  margin: 0 auto 1rem;
+  margin: 1em;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   gap: 12px;
+  max-width: auto;
 }
 
+h1,
+h2,
+h3,
+p {
+  margin: 0.1em 0;
+}
 
 header {
   text-align: center;
-  margin: 0.5em 0 1em 0;
+  margin: 0;
 
 }
-
-header .enviroment {
-  margin: 0rem;
-  padding: 0px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-transform: capitalize;
-}
-
-header h1 {
-  font-size: 2rem;
-  margin: 0px;
-}
-
-.input-container {
-  width: 480px;
-}
-
 
 .input-field {
-  padding: 12px;
-  max-width: 640px;
+  padding: 1rem;
+  max-width: auto;
   font-size: 1rem;
   border-radius: 6px;
   outline: none;
@@ -68,15 +56,13 @@ header h1 {
   outline: none;
 }
 
-.btn-container {
-  width: 360px;
-}
+
 
 .btn {
-  width: 100px;
-  height: 45px;
+  width: 6em;
+  height: 3em;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.5em;
   font-weight: bold;
   color: #fff;
   cursor: pointer;
@@ -98,16 +84,9 @@ header h1 {
   cursor: not-allowed;
 }
 
-.state-container,
-.res-container {
-  width: 320px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  text-align: center;
-}
 
 /* 結果表示グリッド */
-.grid-area {
+/* .grid-area {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
@@ -115,7 +94,7 @@ header h1 {
   width: 700px;
   align-content: center;
   justify-items: center;
-}
+} */
 
 
 
@@ -123,19 +102,23 @@ header h1 {
 
 
 .state-container,
-.res-container {
+.res-container,
+.get-container {
   flex-direction: column;
 }
 
-.state-container h3,
-.res-container h3 {
+h3 {
   color: #ffd700;
-  margin: 0;
 }
 
-.state-container p,
-.res-container p {
-  font-size: 1.2rem;
+
+p {
+  font-size: 1rem;
   font-weight: bold;
-  margin: 0;
+}
+
+span {
+  color: rgb(211, 209, 209);
+  font-size: 1.2em;
+  font-weight: bold;
 }

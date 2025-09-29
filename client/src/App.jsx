@@ -49,47 +49,62 @@ function App() {
   return (
     <div className="App">
 
+      {/* ヘッダー */}
+      {/* envは自動切り替え */}
       <header>
-        <p className='enviroment'>{env}</p>
+        <h3>{env.toUpperCase()}</h3>
         <h1>Express-0912</h1>
       </header>
 
-      <div className="input-container">
-        <input
-          type="text"
-          className="input-field"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-      </div>
+      {/* メインエリア */}
+      {/* ここにコンテナが入る */}
+      <main>
 
-      <div className="btn-container">
+        {/* コンテナ */}
+        <div className="input-container">
+          <input
+            type="text"
+            className="input-field"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        </div>
 
-        <button onClick={postAPI} className="btn post" disabled={isLoading}>
-          {isLoading ? <ClipLoader size={24} color="black" /> : 'POST'}
-        </button>
+        {/* コンテナ */}
+        <div className="btn-container">
+          <button onClick={postAPI} className="btn post" disabled={isLoading}>
+            {isLoading ? <ClipLoader size={24} color="black" /> : 'POST'}
+          </button>
+          <button onClick={getAPI} className="btn get">
+            GET
+          </button>
+        </div>
 
-        <button onClick={getAPI} className="btn get">
-          GET
-        </button>
-
-      </div>
-      <div className="grid-area">
+        {/* コンテナ */}
         <div className="state-container">
           <h3>React State</h3>
           <p>{message || '(空)'}</p>
         </div>
-      </div>
-      <div className="grid-area">
+
+        {/* コンテナ */}
         <div className="res-container">
           <h3>Post Data</h3>
           <p>{postResponse || '(空)'}</p>
         </div>
+
+        {/* コンテナ */}
         <div className="res-container">
           <h3>Get Data</h3>
           <p>{getResponse || '(空)'}</p>
         </div>
-      </div>
+
+      </main>
+
+      {/* 簡易フッター */}
+      <footer>
+        <span>version01</span>
+      </footer>
+
     </div>
   )
 }

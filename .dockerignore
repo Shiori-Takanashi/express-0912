@@ -34,4 +34,4 @@ Dockerfile
 .dockerignore
 
 doc/
-deploy.zsh
+deploy01.zsh

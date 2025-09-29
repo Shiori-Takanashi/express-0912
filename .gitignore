@@ -145,3 +145,4 @@ test-results/
 playwright-report/
 playwright/.cache/
 deploy01.zsh
+dev.zsh

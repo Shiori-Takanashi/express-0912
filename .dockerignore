@@ -35,3 +35,4 @@ Dockerfile
 
 doc/
 deploy01.zsh
+dev.zsh

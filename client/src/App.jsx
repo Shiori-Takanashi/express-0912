@@ -124,7 +124,7 @@ function App() {
 
       {/* 簡易フッター */}
       <footer>
-        <span>version01</span>
+        <span>version04</span>
       </footer >
 
     </div >

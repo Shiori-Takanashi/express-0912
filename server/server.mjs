@@ -19,15 +19,15 @@ app.get('/env', (req, res) => {
 
 // 共通の API（どちらの環境でも必要ならここに書く）
 app.get('/api', (req, res) => {
-    res.json({ message: `Get Response OK.` });
+    res.json({ message: `OK` });
 });
 
 app.post('/api', (req, res) => {
     const { text } = req.body;
     if (!text) {
-        return res.status(400).json({ message: 'Text Is Null.' });
+        return res.status(400).json({ message: 'None' });
     }
-    res.json({ message: `Text is ${text}.` });
+    res.json({ message: `${text}` });
 });
 
 // --- 環境別処理 ---

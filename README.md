@@ -1,181 +1,146 @@
-# Express-0912 Project
+# Express-0912(ver01) プロジェクト説明書
 
-A full-stack web application built with React frontend and Express.js backend, using modern ES modules and development tools.
+## アーキテクチャ概要
+これはReactフロントエンド（`client/`）とExpress.jsバックエンド（`server/`）を持つフルスタックアプリケーションです。両方ともESモジュール（`"type": "module"`）とモダンなJavaScript機能を使用しています。
 
-## 🏗️ Architecture
+### クライアント・サーバー通信
+- フロントエンドはVite開発サーバーでバックエンドAPIへのプロキシ設定で動作
+- すべてのAPI呼び出しは`/api`エンドポイントを使用 - Viteが`http://localhost:5000`にプロキシ
+- 本番環境：Expressが`client/dist`からビルドされたReactアプリを配信
 
-- **Frontend**: React 19.1.1 with Vite build tool
-- **Backend**: Express.js 5.1.0 with ES modules
-- **Development**: Hot reload and proxy configuration
-- **Production**: Static file serving from Express
+[text](../server/node_modules)### 環境対応デプロイメント
+サーバー（`server/server.mjs`）は`NODE_ENV`に基づいて動作を切り替えます：
+- **開発環境**: CORS有効、APIのみモード
+- **本番環境**: 静的Reactビルド + APIルート配信
 
-## 📁 Project Structure
-
-```
-express-0912/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── App.jsx        # Main React component
-│   │   ├── App.css        # Styles
-│   │   └── main.jsx       # React entry point
-│   ├── public/
-│   ├── vite.config.js     # Vite configuration with proxy
-│   └── package.json
-├── server/                 # Express.js backend
-│   ├── server.mjs         # Main server file (ES modules)
-│   └── package.json
-└── README.md              # This file
+```javascript
+if (NODE_ENV === 'development') {
+    app.use(cors()); // 開発中はCORS許可
+} else {
+    const staticPath = path.join(__dirname, '..', 'client', 'dist');
+    app.use(express.static(staticPath));
+}
 ```
 
-## 🚀 Getting Started
+## 主要ファイル構成
+- `server/server.mjs` - ESモジュールを使用したメインExpressサーバー
+- `client/src/App.jsx` - API統合例を含むReactアプリ
+- `client/vite.config.js` - `/api`用の開発プロキシ設定
+- `client/eslint.config.js` - モダンなフラットESLint設定
 
-### Prerequisites
+## 開発ワークフロー
 
-- Node.js (v18 or higher recommended)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository
+### アプリケーションの起動：
 ```bash
-git clone <repository-url>
-cd express-0912
+# ターミナル1 - バックエンド
+cd server && npm run dev
+
+# ターミナル2 - フロントエンド
+cd client && npm run dev
 ```
 
-2. Install dependencies for both client and server
+### APIパターン
+すべてのAPIルートは`/api`でプレフィックスされます。現在のエンドポイント：
+- `GET /api` - 挨拶メッセージを返す
+- `POST /api` - リクエストボディのテキストをエコーバック
+
+### フロントエンドAPI統合
+fetchコールでは相対`/api`パスを使用 - 開発時はViteがプロキシ処理：
+```javascript
+const response = await fetch('/api', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: message })
+})
+```
+
+## プロジェクト固有の規約
+
+### 日本語コメント
+サーバーコードには国際化コンテキストのための日本語コメントが含まれています。
+
+### ESLintルール
+大文字定数を許可するカスタムルール: `'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }]`
+
+### モダンな依存関係
+- React 19.1.1と最新のフック
+- Express 5.1.0とESモジュール
+- Vite 7.xビルドツール
+
+## ビルド＆デプロイ
+- クライアントビルド: `npm run build` (`client/dist`に出力)
+- 本番サーバーは`../client/dist`のビルドされたReactアプリを期待
+- 本番環境では単一プロセスで静的ファイルとAPIの両方を配信
+# Express-0912(ver01) プロジェクト説明書
+
+## アーキテクチャ概要
+これはReactフロントエンド（`client/`）とExpress.jsバックエンド（`server/`）を持つフルスタックアプリケーションです。両方ともESモジュール（`"type": "module"`）とモダンなJavaScript機能を使用しています。
+
+### クライアント・サーバー通信
+- フロントエンドはVite開発サーバーでバックエンドAPIへのプロキシ設定で動作
+- すべてのAPI呼び出しは`/api`エンドポイントを使用 - Viteが`http://localhost:5000`にプロキシ
+- 本番環境：Expressが`client/dist`からビルドされたReactアプリを配信
+
+[text](../server/node_modules)### 環境対応デプロイメント
+サーバー（`server/server.mjs`）は`NODE_ENV`に基づいて動作を切り替えます：
+- **開発環境**: CORS有効、APIのみモード
+- **本番環境**: 静的Reactビルド + APIルート配信
+
+```javascript
+if (NODE_ENV === 'development') {
+    app.use(cors()); // 開発中はCORS許可
+} else {
+    const staticPath = path.join(__dirname, '..', 'client', 'dist');
+    app.use(express.static(staticPath));
+}
+```
+
+## 主要ファイル構成
+- `server/server.mjs` - ESモジュールを使用したメインExpressサーバー
+- `client/src/App.jsx` - API統合例を含むReactアプリ
+- `client/vite.config.js` - `/api`用の開発プロキシ設定
+- `client/eslint.config.js` - モダンなフラットESLint設定
+
+## 開発ワークフロー
+
+### アプリケーションの起動：
 ```bash
-# Install server dependencies
-cd server
-npm install
+# ターミナル1 - バックエンド
+cd server && npm run dev
 
-# Install client dependencies
-cd ../client
-npm install
+# ターミナル2 - フロントエンド
+cd client && npm run dev
 ```
 
-### Development
+### APIパターン
+すべてのAPIルートは`/api`でプレフィックスされます。現在のエンドポイント：
+- `GET /api` - 挨拶メッセージを返す
+- `POST /api` - リクエストボディのテキストをエコーバック
 
-Run both frontend and backend in development mode:
-
-```bash
-# Terminal 1 - Start backend server
-cd server
-npm run dev
-
-# Terminal 2 - Start frontend development server
-cd client
-npm run dev
+### フロントエンドAPI統合
+fetchコールでは相対`/api`パスを使用 - 開発時はViteがプロキシ処理：
+```javascript
+const response = await fetch('/api', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: message })
+})
 ```
 
-The application will be available at:
-- Frontend: `http://localhost:5173` (Vite dev server)
-- Backend API: `http://localhost:5000`
-- API routes are proxied through Vite in development
+## プロジェクト固有の規約
 
-### Production Build
+### 日本語コメント
+サーバーコードには国際化コンテキストのための日本語コメントが含まれています。
 
-1. Build the React application:
-```bash
-cd client
-npm run build
-```
+### ESLintルール
+大文字定数を許可するカスタムルール: `'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }]`
 
-2. Start the production server:
-```bash
-cd server
-npm start
-```
+### モダンな依存関係
+- React 19.1.1と最新のフック
+- Express 5.1.0とESモジュール
+- Vite 7.xビルドツール
 
-In production mode, Express serves the built React app from `client/dist` along with API routes.
-
-## 🔧 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET    | `/api`   | Returns a greeting message |
-| POST   | `/api`   | Echoes back the request body |
-
-## 🛠️ Technology Stack
-
-### Frontend
-- **React** 19.1.1 - Modern React with latest features
-- **Vite** 7.x - Fast build tool and dev server
-- **ESLint** - Code linting with modern flat config
-
-### Backend
-- **Express.js** 5.1.0 - Web framework
-- **CORS** - Cross-origin resource sharing
-- **ES Modules** - Modern JavaScript module system
-
-## 📝 Development Features
-
-### Environment-Aware Configuration
-The server automatically switches behavior based on `NODE_ENV`:
-
-- **Development**: CORS enabled, API-only mode
-- **Production**: Serves static React build + API routes
-
-### Proxy Configuration
-Vite is configured to proxy `/api` requests to the Express server during development, enabling seamless full-stack development.
-
-### Modern JavaScript
-Both client and server use ES modules (`"type": "module"`) and modern JavaScript features.
-
-## 🔧 Configuration Files
-
-- `client/vite.config.js` - Vite configuration with proxy setup
-- `client/eslint.config.js` - Modern flat ESLint configuration
-- `server/server.mjs` - Main Express server with environment switching
-
-## 📋 Available Scripts
-
-### Client (React)
-```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run lint     # Run ESLint
-npm run preview  # Preview production build
-```
-
-### Server (Express)
-```bash
-npm start        # Start production server
-npm run dev      # Start development server
-```
-
-## 🌐 Deployment
-
-For production deployment:
-
-1. Build the client application
-2. Set `NODE_ENV=production`
-3. Start the server - it will serve both the React app and API
-
-The server will automatically serve the built React application from `client/dist` when in production mode.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test both client and server
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the ISC License.
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-1. **Port conflicts**: Make sure ports 5000 (server) and 5173 (client) are available
-2. **Dependency issues**: Delete `node_modules` and run `npm install` again
-3. **Proxy errors**: Check that the backend server is running on port 5000
-
-### Development Tips
-
-- Use browser developer tools to debug API calls
-- Check both terminal outputs for errors
-- The Vite proxy configuration handles CORS in development
-- In production, make sure the client build exists before starting the server
+## ビルド＆デプロイ
+- クライアントビルド: `npm run build` (`client/dist`に出力)
+- 本番サーバーは`../client/dist`のビルドされたReactアプリを期待
+- 本番環境では単一プロセスで静的ファイルとAPIの両方を配信

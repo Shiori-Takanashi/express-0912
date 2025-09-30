@@ -6,7 +6,7 @@ function App() {
   const [message, setMessage] = useState('')
   const [postResponse, setPostResponse] = useState('')
   const [getResponse, setGetResponse] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isChanging, setIsChanging] = useState(false)
   const [env, setEnv] = useState('Loading')
 
   useEffect(() => {
@@ -16,9 +16,19 @@ function App() {
       .catch(() => setEnv('Error'))
   }, [])
 
+  const clearField = () => {
+    setMessage('')
+  }
+
+  const resetPage = () => {
+    setMessage('')
+    setPostResponse('')
+    setGetResponse('')
+  }
+
   const postAPI = async () => {
     try {
-      setIsLoading(true)
+      setIsChanging(true)
       const response = await fetch('/api', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -29,20 +39,20 @@ function App() {
     } catch (error) {
       setPostResponse('ERROR: ' + error.message)
     } finally {
-      setTimeout(() => setIsLoading(false), 800)
+      setTimeout(() => setIsChanging(false), 800)
     }
   }
 
   const getAPI = async () => {
     try {
-      setIsLoading(true)
+      setIsChanging(true)
       const response = await fetch('/api')
       const data = await response.json()
       setGetResponse(data.message || 'GETへの応答')
     } catch (error) {
       setGetResponse('ERROR: ' + error.message)
     } finally {
-      setTimeout(() => setIsLoading(false), 800)
+      setTimeout(() => setIsChanging(false), 800)
     }
   }
 
@@ -72,40 +82,52 @@ function App() {
 
         {/* コンテナ */}
         <div className="btn-container">
-          <button onClick={postAPI} className="btn post" disabled={isLoading}>
-            {isLoading ? <ClipLoader size={24} color="black" /> : 'POST'}
+          <button onClick={postAPI} className="btn post" disabled={isChanging}>
+            {isChanging ? <ClipLoader size={24} color="black" /> : 'POST'}
           </button>
-          <button onClick={getAPI} className="btn get">
-            GET
+          <button onClick={getAPI} className="btn get" disabled={isChanging}>
+            {isChanging ? <ClipLoader size={24} color="black" /> : 'GET'}
+          </button>
+          <button onClick={clearField} className='btn clear' disabled={isChanging}>
+            {isChanging ? <ClipLoader size={24} color="black" /> : 'CLEAR'}
+          </button>
+          <button onClick={resetPage} className='btn reset' disabled={isChanging}>
+            {isChanging ? <ClipLoader size={24} color="black" /> : 'RESET'}
           </button>
         </div>
 
         {/* コンテナ */}
         <div className="state-container">
           <h3>React State</h3>
-          <p>{message || '(空)'}</p>
+          <p>
+            {message || 'None'}
+          </p>
         </div>
 
         {/* コンテナ */}
         <div className="res-container">
           <h3>Post Data</h3>
-          <p>{postResponse || '(空)'}</p>
+          <p>
+            {postResponse || 'None'}
+          </p>
         </div>
 
         {/* コンテナ */}
         <div className="res-container">
           <h3>Get Data</h3>
-          <p>{getResponse || '(空)'}</p>
+          <p>
+            {getResponse || 'None'}
+          </p>
         </div>
 
-      </main>
+      </main >
 
       {/* 簡易フッター */}
       <footer>
         <span>version01</span>
-      </footer>
+      </footer >
 
-    </div>
+    </div >
   )
 }
 export default App

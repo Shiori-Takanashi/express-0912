@@ -74,3 +74,5 @@ jobs:
             --allow-unauthenticated \
             --project ${{ secrets.GCP_PROJECT_ID }}
           echo "✅ Deployed: $SERVICE ($IMAGE)"
+
+# trigger

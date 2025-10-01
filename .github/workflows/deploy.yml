@@ -3,14 +3,14 @@ name: Deploy to Cloud Run
 on:
   push:
     branches:
-      - "ver*"   # ver01, ver02, ver03... のブランチに push したときのみ実行
+      - "ver*"   # ver01, ver02, ver03... のブランチに push したときだけ実行
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. リポジトリをチェックアウト
+      # 1. リポジトリのコードを取得
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -24,35 +24,48 @@ jobs:
       - name: Set up gcloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      # 4. Docker 認証を設定
+      # 4. Docker 認証
       - name: Configure Docker auth
         run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
 
-      # 5. ブランチ名から VERSION と REPO を決定
-      - name: Set VERSION and REPO from branch
+      # 5. ブランチ名から VERSION / REPO / SERVICE を決定
+      - name: Set VERSION / REPO / SERVICE
         run: |
           VERSION=$(echo "${GITHUB_REF_NAME}" | sed 's/ver//')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "REPO=version${VERSION}" >> $GITHUB_ENV
+          echo "REPO=ver${VERSION}" >> $GITHUB_ENV
+          echo "SERVICE=express-app-${VERSION}" >> $GITHUB_ENV
 
-      # 6. Docker ビルド & Artifact Registry に push
+      # 6. Artifact Registry リポジトリを作成（なければ）
+      - name: Ensure Artifact Registry repo exists
+        run: |
+          REGION="${{ secrets.GCP_REGION }}"
+          PROJECT="${{ secrets.GCP_PROJECT_ID }}"
+          if ! gcloud artifacts repositories describe $REPO --location=$REGION --project=$PROJECT > /dev/null 2>&1; then
+            echo "ℹ️ Repo $REPO does not exist. Creating..."
+            gcloud artifacts repositories create $REPO \
+              --repository-format=docker \
+              --location=$REGION \
+              --project=$PROJECT
+          else
+            echo "✅ Repo $REPO already exists."
+          fi
+
+      # 7. Docker build & push
       - name: Build and push Docker image
         run: |
           REGION="${{ secrets.GCP_REGION }}"
           PROJECT="${{ secrets.GCP_PROJECT_ID }}"
-          SERVICE="express-app-${VERSION}"
           TAG=$(date +%s)
-
           IMAGE="$REGION-docker.pkg.dev/$PROJECT/$REPO/$SERVICE:$TAG"
 
           echo "📦 Build image: $IMAGE"
           docker build -t $IMAGE .
           docker push $IMAGE
 
-          echo "SERVICE=$SERVICE" >> $GITHUB_ENV
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
-      # 7. Cloud Run にデプロイ
+      # 8. Cloud Run にデプロイ
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy $SERVICE \
@@ -60,5 +73,4 @@ jobs:
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
             --project ${{ secrets.GCP_PROJECT_ID }}
-
           echo "✅ Deployed: $SERVICE ($IMAGE)"

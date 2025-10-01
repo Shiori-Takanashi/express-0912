@@ -1,0 +1,64 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - "ver*"   # ver01, ver02, ver03... のブランチに push したときのみ実行
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. リポジトリをチェックアウト
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Google Cloud に認証
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # 3. gcloud CLI をセットアップ
+      - name: Set up gcloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # 4. Docker 認証を設定
+      - name: Configure Docker auth
+        run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
+
+      # 5. ブランチ名から VERSION と REPO を決定
+      - name: Set VERSION and REPO from branch
+        run: |
+          VERSION=$(echo "${GITHUB_REF_NAME}" | sed 's/ver//')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "REPO=version${VERSION}" >> $GITHUB_ENV
+
+      # 6. Docker ビルド & Artifact Registry に push
+      - name: Build and push Docker image
+        run: |
+          REGION="${{ secrets.GCP_REGION }}"
+          PROJECT="${{ secrets.GCP_PROJECT_ID }}"
+          SERVICE="express-app-${VERSION}"
+          TAG=$(date +%s)
+
+          IMAGE="$REGION-docker.pkg.dev/$PROJECT/$REPO/$SERVICE:$TAG"
+
+          echo "📦 Build image: $IMAGE"
+          docker build -t $IMAGE .
+          docker push $IMAGE
+
+          echo "SERVICE=$SERVICE" >> $GITHUB_ENV
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+      # 7. Cloud Run にデプロイ
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE \
+            --image $IMAGE \
+            --region ${{ secrets.GCP_REGION }} \
+            --allow-unauthenticated \
+            --project ${{ secrets.GCP_PROJECT_ID }}
+
+          echo "✅ Deployed: $SERVICE ($IMAGE)"

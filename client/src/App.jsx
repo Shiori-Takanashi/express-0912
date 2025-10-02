@@ -16,14 +16,29 @@ function App() {
       .catch(() => setEnv('Error'))
   }, [])
 
-  const clearField = () => {
-    setMessage('')
+
+  const delayWithLoading = (delay = 800) => {
+    setTimeout(() => setIsChanging(false), delay);
   }
 
-  const resetPage = () => {
-    setMessage('')
-    setPostResponse('')
-    setGetResponse('')
+
+  const resetPage = async () => {
+    try {
+      setIsChanging(true)
+      const msg = ''
+      delayWithLoading()
+      setMessage(msg)
+      setGetResponse(msg)
+      setPostResponse(msg)
+    } catch (error) {
+      const msg = 'Reset is failed.'
+      delayWithLoading()
+      setMessage(msg)
+      setGetResponse(msg)
+      setPostResponse(msg)
+    } finally {
+      delayWithLoading()
+    }
   }
 
   const postAPI = async () => {
@@ -71,7 +86,7 @@ function App() {
       <main>
 
         {/* コンテナ */}
-        <div className="input-container">
+        <div className="inputs container">
           <input
             type="text"
             className="input-field"
@@ -81,23 +96,23 @@ function App() {
         </div>
 
         {/* コンテナ */}
-        <div className="btn-container">
+        <div className="btns container">
           <button onClick={postAPI} className="btn post" disabled={isChanging}>
             {isChanging ? <ClipLoader size={24} color="black" /> : 'POST'}
           </button>
           <button onClick={getAPI} className="btn get" disabled={isChanging}>
             {isChanging ? <ClipLoader size={24} color="black" /> : 'GET'}
           </button>
-          <button onClick={clearField} className='btn clear' disabled={isChanging}>
+          {/* <button onClick={clearField} className='btn clear' disabled={isChanging}>
             {isChanging ? <ClipLoader size={24} color="black" /> : 'CLEAR'}
-          </button>
+          </button> */}
           <button onClick={resetPage} className='btn reset' disabled={isChanging}>
             {isChanging ? <ClipLoader size={24} color="black" /> : 'RESET'}
           </button>
         </div>
 
         {/* コンテナ */}
-        <div className="state-container">
+        <div className="states container">
           <h3>React State</h3>
           <p>
             {message || 'None'}
@@ -105,7 +120,7 @@ function App() {
         </div>
 
         {/* コンテナ */}
-        <div className="res-container">
+        <div className="posts container">
           <h3>Post Data</h3>
           <p>
             {postResponse || 'None'}
@@ -113,7 +128,7 @@ function App() {
         </div>
 
         {/* コンテナ */}
-        <div className="res-container">
+        <div className="gets container">
           <h3>Get Data</h3>
           <p>
             {getResponse || 'None'}

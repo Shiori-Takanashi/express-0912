@@ -2,7 +2,7 @@
 .App {
   min-height: 100vh;
   padding: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #768ae3 0%, #7f5ba2 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,21 +10,30 @@
   font-family: sans-serif;
 }
 
-.state-container,
-.res-container,
-.input-container,
-.btn-container {
+.container {
   background: rgba(255, 255, 255, 0.1);
-  padding: 1em 3em;
+  padding: 1em;
   text-align: center;
-  margin: 1em;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  margin: 1.5em;
+  border-radius: 0.5em;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
-  gap: 12px;
   max-width: auto;
 }
+
+.btns {
+  flex-direction: row;
+  gap: 12px;
+}
+
+.states,
+.posts,
+.gets {
+  flex-direction: column;
+}
+
 
 h1,
 h2,
@@ -35,7 +44,7 @@ p {
 
 header {
   text-align: center;
-  margin: 0;
+  margin: 1em 0 0 0;
 
 }
 
@@ -85,27 +94,8 @@ header {
 }
 
 
-/* 結果表示グリッド */
-/* .grid-area {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-  width: 700px;
-  align-content: center;
-  justify-items: center;
-} */
 
 
-
-/* ボタングループ */
-
-
-.state-container,
-.res-container,
-.get-container {
-  flex-direction: column;
-}
 
 h3 {
   color: #ffd700;
@@ -113,12 +103,12 @@ h3 {
 
 
 p {
-  font-size: 1rem;
+  font-size: 1em;
   font-weight: bold;
 }
 
 span {
-  color: rgb(211, 209, 209);
+  color: rgb(236, 255, 217);
   font-size: 1.2em;
   font-weight: bold;
 }
